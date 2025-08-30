@@ -1,23 +1,29 @@
 "use client";
 
 import "./globals.css";
-import { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import { WelcomeModal } from "./components/WelcomeModal/WelcomeModal";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { BudgetItem } from "./shared/types";
 import { Moon, Settings, Sun } from "./shared/icons";
 
-export type RootContextType = {
-  budgetData: BudgetItem[];
-  setBudgetData: React.Dispatch<React.SetStateAction<BudgetItem[]>>;
-  monthsPassed: number;
-  setMonthsPassed: React.Dispatch<React.SetStateAction<number>>;
+interface RootContextType {
   isDarkMode: boolean;
-  setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
-};
+  setIsDarkMode: (value: boolean) => void;
+  view: string;
+  setView: (view: string) => void;
+  budgetData: BudgetItem[];
+  setBudgetData: (data: BudgetItem[]) => void;
+  addBudgetItem: (item: BudgetItem) => void;
+  updateBudgetItem: (item: BudgetItem) => void;
+  deleteBudgetItem: (id: number) => void;
+  deleteCategory: (name: string) => void;
+  monthsPassed: number;
+  setMonthsPassed: (value: number) => void;
+}
 
-const rootContext = createContext<RootContextType | undefined>(undefined);
+const rootContext = createContext<RootContextType | null>(null);
 
 export default function RootLayout({
   children,
@@ -146,6 +152,7 @@ export default function RootLayout({
     },
   ];
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [view, setView] = useState("dashboard");
   const [budgetData, setBudgetData] = useState<BudgetItem[]>([]);
   const [monthsPassed, setMonthsPassed] = useState(new Date().getMonth() + 1);
   const [showWelcome, setShowWelcome] = useState(false);
@@ -154,26 +161,21 @@ export default function RootLayout({
     const hasVisited = localStorage.getItem("hasVisitedFinHome");
     const savedData = localStorage.getItem("finHomeData");
 
+    if (!savedData && !hasVisited) {
+      setShowWelcome(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("finHomeData");
     if (savedData) {
       setBudgetData(JSON.parse(savedData));
-    } else if (!hasVisited) {
-      setShowWelcome(true);
     }
   }, []);
 
   useEffect(() => {
     localStorage.setItem("finHomeData", JSON.stringify(budgetData));
   }, [budgetData]);
-
-  const handleTemplateChoice = (choice: "blank" | "template") => {
-    if (choice === "template") {
-      setBudgetData(templateForTwo);
-    } else {
-      setBudgetData([]);
-    }
-    setShowWelcome(false);
-    localStorage.setItem("hasVisitedFinHome", "true");
-  };
 
   useEffect(() => {
     if (isDarkMode) {
@@ -183,21 +185,49 @@ export default function RootLayout({
     }
   }, [isDarkMode]);
 
+  const addBudgetItem = (item: BudgetItem) =>
+    setBudgetData((prevData) => [...prevData, item]);
+  const updateBudgetItem = (updatedItem: BudgetItem) =>
+    setBudgetData((prevData) =>
+      prevData.map((item) => (item.id === updatedItem.id ? updatedItem : item)),
+    );
+  const deleteBudgetItem = (itemId: number) =>
+    setBudgetData((prevData) => prevData.filter((item) => item.id !== itemId));
+  const deleteCategory = (categoryName: string) =>
+    setBudgetData((prevData) =>
+      prevData.filter((item) => item.category !== categoryName),
+    );
+  const handleTemplateChoice = (choice: "blank" | "template") => {
+    if (choice === "template") {
+      setBudgetData(templateForTwo);
+    } else {
+      setBudgetData([]);
+    }
+    setShowWelcome(false);
+    localStorage.setItem("hasVisitedHorizonFinance", "true");
+  };
+
+  const contextValue: RootContextType = {
+    isDarkMode,
+    setIsDarkMode,
+    view,
+    setView,
+    budgetData,
+    setBudgetData,
+    addBudgetItem,
+    updateBudgetItem,
+    deleteBudgetItem,
+    deleteCategory,
+    monthsPassed,
+    setMonthsPassed,
+  };
+
   const pathname = usePathname();
 
   return (
     <html lang="en">
       <body>
-        <rootContext.Provider
-          value={{
-            budgetData,
-            setBudgetData,
-            monthsPassed,
-            setMonthsPassed,
-            isDarkMode,
-            setIsDarkMode,
-          }}
-        >
+        <rootContext.Provider value={contextValue}>
           <div className="bg-gray-50 dark:bg-gray-900 min-h-screen font-sans text-gray-800 dark:text-gray-200 dark-mode-transition">
             {showWelcome && (
               <WelcomeModal onSelectTemplateAction={handleTemplateChoice} />

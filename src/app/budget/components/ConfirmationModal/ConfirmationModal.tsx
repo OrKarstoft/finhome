@@ -1,5 +1,8 @@
 "use client";
+
+import React from "react";
 import Modal from "../../../components/Modal/Modal";
+
 export function ConfirmationModal({
   onConfirm,
   onCancel,

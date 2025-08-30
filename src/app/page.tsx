@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useContext } from "react";
+import React, { useMemo, useContext } from "react";
 import { rootContext } from "./layout";
 import SummaryCards from "./components/SummaryCards/SummaryCards";
 import SummaryTable from "./components/SummaryTable/SummaryTable";

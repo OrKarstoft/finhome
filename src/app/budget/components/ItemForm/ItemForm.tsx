@@ -1,37 +1,50 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ConfirmationModal } from "../ConfirmationModal/ConfirmationModal";
-import { BudgetItem } from "@/app/shared/types";
+import { BudgetItem, Correction } from "@/app/shared/types";
 import { MONTHS } from "@/app/shared/consts";
 import { Trash2 } from "@/app/shared/icons";
 
 interface ItemFormProps {
-  item: BudgetItem;
+  item: BudgetItem | undefined;
   onSave: (item: BudgetItem) => void;
   onDelete: (id: number) => void;
   onDone: () => void;
   existingCategories: string[];
 }
-export default function ItemForm({
-  item,
-  onSave,
-  onDelete,
-  onDone,
-  existingCategories,
-}: ItemFormProps) {
-  const [formData, setFormData] = useState(
-    item || {
+export const ItemForm: React.FC<{
+  item: BudgetItem | null;
+  onSave: (item: BudgetItem) => void;
+  onDelete: (id: number) => void;
+  onDone: () => void;
+  existingCategories: string[];
+}> = ({ item, onSave, onDelete, onDone, existingCategories }) => {
+  const [formData, setFormData] = useState(() => {
+    const defaultState = {
       itemName: "",
       planned: "",
       category: existingCategories[0] || "new",
-      type: "expense",
-      paymentMonths: [],
-      corrections: [],
+      type: "expense" as "income" | "expense",
+      paymentMonths: [] as number[],
+      corrections: [] as Correction[],
       totalAmount: "",
       amountPaidOff: "",
-    },
-  );
+    };
+
+    if (!item) {
+      return defaultState;
+    }
+
+    // Merge item props, ensuring fields bound to inputs are not undefined to prevent uncontrolled components
+    return {
+      ...defaultState,
+      ...item,
+      planned: item.planned ?? "",
+      totalAmount: item.totalAmount ?? "",
+      amountPaidOff: item.amountPaidOff ?? "",
+    };
+  });
   const [newCategory, setNewCategory] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -79,21 +92,38 @@ export default function ItemForm({
       );
       return;
     }
-    onSave({
-      ...formData,
-      planned: Number(formData.planned),
-      totalAmount: Number(formData.totalAmount),
-      amountPaidOff: Number(formData.amountPaidOff),
+
+    // Explicitly construct the object to be saved to ensure correct types and structure
+    const submissionData: Omit<BudgetItem, "id"> & { id?: number } = {
+      itemName: formData.itemName,
       category: finalCategory,
-      id: isEditing ? item.id : Date.now(),
-    });
+      type: formData.type,
+      planned: Number(formData.planned),
+      paymentMonths: formData.paymentMonths,
+      corrections: formData.corrections,
+    };
+
+    if (formData.category === "Loan") {
+      submissionData.totalAmount = Number(formData.totalAmount);
+      submissionData.amountPaidOff = Number(formData.amountPaidOff);
+    }
+
+    if (isEditing && item?.id) {
+      submissionData.id = item.id;
+    } else {
+      submissionData.id = Date.now();
+    }
+
+    onSave(submissionData as BudgetItem);
     onDone();
   };
 
   const handleDelete = () => {
-    onDelete(item.id);
-    setShowDeleteConfirm(false);
-    onDone();
+    if (item && item.id) {
+      onDelete(item.id);
+      setShowDeleteConfirm(false);
+      onDone();
+    }
   };
 
   const inputClass =
@@ -290,4 +320,4 @@ export default function ItemForm({
       </div>
     </>
   );
-}
+};
