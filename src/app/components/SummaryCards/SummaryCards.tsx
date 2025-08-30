@@ -1,42 +1,27 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
+import { BudgetItem } from "../../shared/types";
+import {
+  getAnnualPlanned,
+  getCorrectedYTD,
+  getProjectedAnnual,
+} from "../../shared/functions";
 
-export default function SummaryCards({ budgetData, monthsPassed }) {
+interface SummaryCardsProps {
+  budgetData: BudgetItem[];
+  monthsPassed: number;
+}
+
+export default function SummaryCards({
+  budgetData,
+  monthsPassed,
+}: SummaryCardsProps) {
   const summary = useMemo(() => {
     let originalPlanNet = 0;
     let projectedNet = 0;
     let actualNet = 0;
 
-    const getAnnualPlanned = (item) => item.planned * item.paymentMonths.length;
-
-    const getCorrectedYTD = (item, monthsPassed) => {
-      let total = 0;
-      for (let i = 1; i <= monthsPassed; i++) {
-        if (item.paymentMonths.includes(i)) {
-          const correction = item.corrections.find((c) => c.month === i);
-          total += correction ? correction.amount : item.planned;
-        }
-      }
-      return total;
-    };
-
-    const getPlannedYTD = (item, monthsPassed) => {
-      return (
-        item.planned *
-        item.paymentMonths.filter((m) => m <= monthsPassed).length
-      );
-    };
-
-    const getProjectedAnnual = (item, monthsPassed) => {
-      const actualYTD = getCorrectedYTD(item, monthsPassed);
-      const futurePlanned =
-        item.paymentMonths.filter((m) => m > monthsPassed).length *
-        item.planned;
-      return actualYTD + futurePlanned;
-    };
-
-    const getMonthlyEquivalent = (item) => getAnnualPlanned(item) / 12;
     budgetData.forEach((item) => {
       const sign = item.type === "income" ? 1 : -1;
       originalPlanNet += getAnnualPlanned(item) * sign;
@@ -49,11 +34,11 @@ export default function SummaryCards({ budgetData, monthsPassed }) {
     return { originalPlanNet, projectedNet, actualNet, variance };
   }, [budgetData, monthsPassed]);
 
-  const SummaryCard = ({
-    title,
-    value,
-    colorClass = "text-gray-800 dark:text-white",
-  }) => (
+  const SummaryCard: React.FC<{
+    title: string;
+    value: number;
+    colorClass?: string;
+  }> = ({ title, value, colorClass = "text-gray-800 dark:text-white" }) => (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex-1 dark-mode-transition">
       <h4 className="text-gray-500 dark:text-gray-400 text-sm font-medium">
         {title}

@@ -33,7 +33,9 @@ export default function Budget() {
   const deleteBudgetItem = (itemId: number) =>
     setBudgetData((prevData) => prevData.filter((item) => item.id !== itemId));
 
-  const [editingItem, setEditingItem] = useState<BudgetItem | {} | null>(null);
+  const [editingItem, setEditingItem] = useState<BudgetItem | object | null>(
+    null,
+  );
   const [viewType, setViewType] = useState("list");
   const existingCategories = useMemo(
     () => [

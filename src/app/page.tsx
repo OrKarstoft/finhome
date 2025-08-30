@@ -12,6 +12,7 @@ import {
   getPlannedYTD,
   getProjectedAnnual,
 } from "./shared/functions";
+import { CategorySummary } from "./shared/types";
 
 export default function Home() {
   const context = useContext(rootContext);
@@ -22,30 +23,34 @@ export default function Home() {
 
   const { budgetData, monthsPassed, setMonthsPassed } = context;
 
-  const summarizedData = useMemo(() => {
-    const summary = budgetData.reduce((acc, item) => {
-      if (item.category === "Loan") return acc; // Exclude loans from main summary tables
-      if (!acc[item.category]) {
-        acc[item.category] = {
-          name: item.category,
-          type: item.type,
-          monthlyEquivalent: 0,
-          totalAnnualPlanned: 0,
-          totalAnnualProjected: 0,
-          actual: 0,
-          plannedYTD: 0,
-        };
-      }
-      acc[item.category].monthlyEquivalent += getMonthlyEquivalent(item);
-      acc[item.category].totalAnnualPlanned += getAnnualPlanned(item);
-      acc[item.category].totalAnnualProjected += getProjectedAnnual(
-        item,
-        monthsPassed,
+  const summarizedData: CategorySummary[] = useMemo(() => {
+    const summary: Record<string, CategorySummary> = budgetData
+      .filter((x) => x.category != "Loan")
+      .reduce(
+        (acc, item) => {
+          if (!acc[item.category]) {
+            acc[item.category] = {
+              name: item.category,
+              type: item.type,
+              monthlyEquivalent: 0,
+              totalAnnualPlanned: 0,
+              totalAnnualProjected: 0,
+              actual: 0,
+              plannedYTD: 0,
+            };
+          }
+          acc[item.category].monthlyEquivalent += getMonthlyEquivalent(item);
+          acc[item.category].totalAnnualPlanned += getAnnualPlanned(item);
+          acc[item.category].totalAnnualProjected += getProjectedAnnual(
+            item,
+            monthsPassed,
+          );
+          acc[item.category].actual += getCorrectedYTD(item, monthsPassed);
+          acc[item.category].plannedYTD += getPlannedYTD(item, monthsPassed);
+          return acc;
+        },
+        {} as Record<string, CategorySummary>,
       );
-      acc[item.category].actual += getCorrectedYTD(item, monthsPassed);
-      acc[item.category].plannedYTD += getPlannedYTD(item, monthsPassed);
-      return acc;
-    }, {});
     return Object.values(summary);
   }, [budgetData, monthsPassed]);
 

@@ -62,6 +62,7 @@ export default function Settings() {
         text: "Error: Invalid or corrupt data string.",
         type: "error",
       });
+      console.log(error);
     }
   };
 
@@ -74,8 +75,9 @@ export default function Settings() {
       // TODO(fix): Find a react way to copy to clipboard
       document.execCommand("copy");
       setMessage({ text: "Copied to clipboard!", type: "success" });
-    } catch (err) {
+    } catch (error) {
       setMessage({ text: "Failed to copy.", type: "error" });
+      console.log(error);
     }
     document.body.removeChild(textArea);
   };

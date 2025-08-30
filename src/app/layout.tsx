@@ -2,7 +2,7 @@
 
 import "./globals.css";
 import { useEffect, useState, createContext } from "react";
-import WelcomeModal from "./components/WelcomeModal/WelcomeModal";
+import { WelcomeModal } from "./components/WelcomeModal/WelcomeModal";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { BudgetItem } from "./shared/types";
@@ -200,7 +200,7 @@ export default function RootLayout({
         >
           <div className="bg-gray-50 dark:bg-gray-900 min-h-screen font-sans text-gray-800 dark:text-gray-200 dark-mode-transition">
             {showWelcome && (
-              <WelcomeModal onSelectTemplate={handleTemplateChoice} />
+              <WelcomeModal onSelectTemplateAction={handleTemplateChoice} />
             )}
             <div className="container mx-auto p-4 sm:p-6 lg:p-8">
               <nav className="bg-white dark:bg-gray-800 shadow rounded-lg mb-8 dark-mode-transition">
