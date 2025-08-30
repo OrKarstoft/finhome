@@ -151,8 +151,8 @@ export default function RootLayout({
   const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisitedHorizonFinance");
-    const savedData = localStorage.getItem("horizonFinanceData");
+    const hasVisited = localStorage.getItem("hasVisitedFinHome");
+    const savedData = localStorage.getItem("finHomeData");
 
     if (savedData) {
       setBudgetData(JSON.parse(savedData));
@@ -162,7 +162,7 @@ export default function RootLayout({
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("horizonFinanceData", JSON.stringify(budgetData));
+    localStorage.setItem("finHomeData", JSON.stringify(budgetData));
   }, [budgetData]);
 
   const handleTemplateChoice = (choice: "blank" | "template") => {
@@ -172,7 +172,7 @@ export default function RootLayout({
       setBudgetData([]);
     }
     setShowWelcome(false);
-    localStorage.setItem("hasVisitedHorizonFinance", "true");
+    localStorage.setItem("hasVisitedFinHome", "true");
   };
 
   useEffect(() => {
@@ -208,7 +208,7 @@ export default function RootLayout({
                   <div className="relative flex items-center justify-between h-16">
                     <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                       <div className="flex-shrink-0 flex items-center text-gray-800 dark:text-white font-bold text-xl">
-                        Horizon Finance
+                        FinHome
                       </div>
                       <div className="hidden sm:block sm:ml-6">
                         <div className="flex space-x-4">
@@ -252,7 +252,7 @@ export default function RootLayout({
               {children}
 
               <footer className="text-center mt-12 text-gray-500 dark:text-gray-400 text-sm">
-                <p>Horizon Finance by Oliver Karstoft</p>
+                <p>FinHome by Oliver Karstoft</p>
               </footer>
             </div>
           </div>
