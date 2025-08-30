@@ -1,0 +1,94 @@
+"use client";
+
+import { PiggyBank, Target, Edit, Settings } from "lucide-react";
+
+export default function WelcomeModal({ onSelectTemplate }) {
+  const Modal = ({ children, onClose }) => (
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-full overflow-y-auto dark-mode-transition"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
+    </div>
+  );
+  return (
+    <Modal onClose={() => onSelectTemplate("blank")}>
+      <div className="text-center">
+        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500">
+          <PiggyBank className="h-8 w-8 text-white" />
+        </div>
+        <h2 className="mt-4 text-2xl font-bold text-gray-800 dark:text-white">
+          Welcome to Horizon Finance!
+        </h2>
+        <p className="mt-2 text-gray-600 dark:text-gray-300">
+          Your personal tool for tracking your annual budget against your
+          real-life spending.
+        </p>
+      </div>
+      <div className="mt-6 space-y-4 text-left">
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+            <Target className="h-5 w-5 text-indigo-500" />
+          </div>
+          <div>
+            <h4 className="font-semibold text-gray-800 dark:text-white">
+              The Projected Budget
+            </h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Track your planned budget against actual expenses. Make
+              corrections throughout the year to see how your financial horizon
+              changes.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+            <Edit className="h-5 w-5 text-indigo-500" />
+          </div>
+          <div>
+            <h4 className="font-semibold text-gray-800 dark:text-white">
+              Full Control
+            </h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Add, edit, and delete any income or expense. Manage your own
+              categories in the settings.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+            <Settings className="h-5 w-5 text-indigo-500" />
+          </div>
+          <div>
+            <h4 className="font-semibold text-gray-800 dark:text-white">
+              Private & Secure
+            </h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Your data is yours. Nothing is saved on a server. Use the settings
+              page to export your data as a text string to save or transfer.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <button
+          onClick={() => onSelectTemplate("blank")}
+          className="w-full py-3 px-4 text-sm font-semibold rounded-lg text-indigo-600 bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-300 dark:hover:bg-indigo-900/70 transition-colors"
+        >
+          Start with a Blank Slate
+        </button>
+        <button
+          onClick={() => onSelectTemplate("template")}
+          className="w-full py-3 px-4 text-sm font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
+        >
+          Use a Template for Two
+        </button>
+      </div>
+    </Modal>
+  );
+}
