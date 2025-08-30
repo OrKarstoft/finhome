@@ -2,24 +2,25 @@
 
 import React, { useState, useEffect } from "react";
 import { ConfirmationModal } from "../ConfirmationModal/ConfirmationModal";
-import { BudgetItem, Correction } from "@/app/shared/types";
-import { MONTHS } from "@/app/shared/consts";
-import { Trash2 } from "@/app/shared/icons";
+import { BudgetItem, Correction } from "../../../shared/types";
+import { MONTHS } from "../../../shared/consts";
+import { Trash2 } from "lucide-react";
 
 interface ItemFormProps {
-  item: BudgetItem | undefined;
-  onSave: (item: BudgetItem) => void;
-  onDelete: (id: number) => void;
-  onDone: () => void;
-  existingCategories: string[];
-}
-export const ItemForm: React.FC<{
   item: BudgetItem | null;
   onSave: (item: BudgetItem) => void;
   onDelete: (id: number) => void;
   onDone: () => void;
   existingCategories: string[];
-}> = ({ item, onSave, onDelete, onDone, existingCategories }) => {
+}
+
+export const ItemForm: React.FC<ItemFormProps> = ({
+  item,
+  onSave,
+  onDelete,
+  onDone,
+  existingCategories,
+}) => {
   const [formData, setFormData] = useState(() => {
     const defaultState = {
       itemName: "",

@@ -1,26 +1,19 @@
 "use client";
 
-import { useState, useMemo, useContext } from "react";
+import React, { useState, useMemo, useContext } from "react";
 import { rootContext } from "../layout";
-import { Trash2 } from "../shared/icons";
 import { ConfirmationModal } from "../budget/components/ConfirmationModal/ConfirmationModal";
+import { Trash2 } from "lucide-react";
 
 export default function Settings() {
   const context = useContext(rootContext);
-  if (!context)
-    throw new Error(
-      "Context not found. Ensure Settings is wrapped in rootContext.Provider.",
-    );
-  const { budgetData, setBudgetData } = context;
+  if (!context) throw new Error("Context not found");
+  const { budgetData, setBudgetData, deleteCategory } = context;
+
   const [exportString, setExportString] = useState("");
   const [importString, setImportString] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
-
-  const deleteCategory = (categoryName: string) =>
-    setBudgetData((prevData) =>
-      prevData.filter((item) => item.category !== categoryName),
-    );
 
   const allCategories = useMemo(
     () =>
@@ -72,7 +65,6 @@ export default function Settings() {
     document.body.appendChild(textArea);
     textArea.select();
     try {
-      // TODO(fix): Find a react way to copy to clipboard
       document.execCommand("copy");
       setMessage({ text: "Copied to clipboard!", type: "success" });
     } catch (error) {

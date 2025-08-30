@@ -6,7 +6,7 @@ import { WelcomeModal } from "./components/WelcomeModal/WelcomeModal";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { BudgetItem } from "./shared/types";
-import { Moon, Settings, Sun } from "./shared/icons";
+import { Cog, MoonIcon, SunIcon } from "lucide-react";
 
 interface RootContextType {
   isDarkMode: boolean;
@@ -282,16 +282,16 @@ export default function RootLayout({
                         href="/settings"
                         className="p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                       >
-                        <Settings className="h-6 w-6" />
+                        <Cog className="h-6 w-6" />
                       </Link>
                       <Link
                         href="?darkmode"
                         className="ml-2 p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                       >
                         {isDarkMode ? (
-                          <Sun className="h-6 w-6" />
+                          <SunIcon className="h-6 w-6" />
                         ) : (
-                          <Moon className="h-6 w-6" />
+                          <MoonIcon className="h-6 w-6" />
                         )}
                       </Link>
                     </div>

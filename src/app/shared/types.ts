@@ -4,7 +4,7 @@ export interface Correction {
 }
 
 export interface BudgetItem {
-  id?: number;
+  id: number;
   itemName: string;
   category: string;
   type: "income" | "expense";

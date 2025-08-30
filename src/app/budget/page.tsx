@@ -22,7 +22,9 @@ const BudgetPage: React.FC = () => {
   const { budgetData, addBudgetItem, updateBudgetItem, deleteBudgetItem } =
     context;
 
-  const [editingItem, setEditingItem] = useState<BudgetItem | {} | null>(null);
+  const [editingItem, setEditingItem] = useState<BudgetItem | object | null>(
+    null,
+  );
   const [viewType, setViewType] = useState("list");
   const existingCategories = useMemo(
     () => [
@@ -112,7 +114,9 @@ const ListViewWrapper: React.FC = () => {
     deleteBudgetItem,
     addBudgetItem,
   } = context;
-  const [editingItem, setEditingItem] = useState<BudgetItem | {} | null>(null);
+  const [editingItem, setEditingItem] = useState<BudgetItem | object | null>(
+    null,
+  );
 
   const existingCategories = useMemo(
     () => [
