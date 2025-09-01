@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { PiggyBank, Target, Edit, Settings } from "lucide-react";
 import Modal from "../Modal/Modal";
 
