@@ -284,16 +284,16 @@ export default function RootLayout({
                       >
                         <Cog className="h-6 w-6" />
                       </Link>
-                      <Link
-                        href="?darkmode"
-                        className="ml-2 p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                      >
-                        {isDarkMode ? (
-                          <SunIcon className="h-6 w-6" />
-                        ) : (
-                          <MoonIcon className="h-6 w-6" />
-                        )}
-                      </Link>
+                      {/* <button */}
+                      {/*   className="ml-2 p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" */}
+                      {/*   onClick={() => setIsDarkMode(!isDarkMode)} */}
+                      {/* > */}
+                      {/*   {isDarkMode ? ( */}
+                      {/*     <SunIcon className="h-6 w-6" /> */}
+                      {/*   ) : ( */}
+                      {/*     <MoonIcon className="h-6 w-6" /> */}
+                      {/*   )} */}
+                      {/* </button> */}
                     </div>
                   </div>
                 </div>
