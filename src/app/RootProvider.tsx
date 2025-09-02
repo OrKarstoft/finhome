@@ -31,6 +31,8 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
   const [budgetData, setBudgetData] = useState<BudgetItem[]>([]);
   const [monthsPassed, setMonthsPassed] = useState(new Date().getMonth() + 1);
   const [showWelcome, setShowWelcome] = useState(false);
+  
+  // Use ref to track when template data is being set to avoid race conditions
   const justSetTemplateRef = useRef(false);
 
   useEffect(() => {
@@ -44,19 +46,16 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    if (justSetTemplateRef.current) {
+    console.log("useEffect for saving data triggered, budgetData.length:", budgetData.length);
+    const hasVisited = localStorage.getItem("hasVisitedFinHome");
+    
+    // Save data immediately if we just set template data, or if there's data and the user has visited
+    if (justSetTemplateRef.current || (hasVisited && budgetData.length > 0)) {
+      console.log("Saving data to localStorage");
       localStorage.setItem("finHomeData", JSON.stringify(budgetData));
-      justSetTemplateRef.current = false;
+      justSetTemplateRef.current = false; // Reset the flag
     } else {
-      const hasVisited = localStorage.getItem("hasVisitedFinHome");
-      if (hasVisited && budgetData.length > 0) {
-        const savedData = localStorage.getItem("finHomeData");
-        const currentSavedData = savedData ? JSON.parse(savedData) : [];
-        // Only save if the data is actually different
-        if (JSON.stringify(currentSavedData) !== JSON.stringify(budgetData)) {
-          localStorage.setItem("finHomeData", JSON.stringify(budgetData));
-        }
-      }
+      console.log("Not saving data - hasVisited:", hasVisited, "budgetData.length:", budgetData.length);
     }
   }, [budgetData]);
 
@@ -85,18 +84,23 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
   const memoizedTemplateForTwo = useMemo(() => templateForTwo, []);
 
   const handleTemplateChoice = useCallback((choice: "blank" | "template") => {
+    console.log("handleTemplateChoice called with:", choice);
     setShowWelcome(false);
     localStorage.setItem("hasVisitedFinHome", "true");
+    console.log("Set hasVisitedFinHome to true");
     
-    // Use startTransition to make the state update non-blocking
-    startTransition(() => {
+    if (choice === "template") {
+      console.log("Setting template data with", memoizedTemplateForTwo.length, "items");
+      // Mark that we're setting template data for the save logic
       justSetTemplateRef.current = true;
-      if (choice === "template") {
+      // Use startTransition to prevent the UI from freezing during expensive calculations
+      startTransition(() => {
         setBudgetData(memoizedTemplateForTwo);
-      } else {
-        setBudgetData([]);
-      }
-    });
+      });
+    } else {
+      console.log("Setting empty budget data");
+      setBudgetData([]);
+    }
   }, [memoizedTemplateForTwo]);
 
   const contextValue: RootContextType = {

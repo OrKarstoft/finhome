@@ -24,6 +24,9 @@ export default function Home() {
   const { budgetData, monthsPassed, setMonthsPassed } = context;
 
   const summarizedData: CategorySummary[] = useMemo(() => {
+    console.log("Dashboard calculations running for", budgetData.length, "items");
+    const startTime = performance.now();
+    
     const summary: Record<string, CategorySummary> = budgetData
       .filter((x) => x.category != "Loan")
       .reduce(
@@ -51,6 +54,9 @@ export default function Home() {
         },
         {} as Record<string, CategorySummary>,
       );
+    
+    const endTime = performance.now();
+    console.log(`Dashboard calculations completed in ${endTime - startTime}ms`);
     return Object.values(summary);
   }, [budgetData, monthsPassed]);
 
