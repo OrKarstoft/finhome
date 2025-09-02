@@ -44,7 +44,6 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("hasVisitedFinHome");
-    console.log("useEffect for saving data triggered, budgetData.length:", budgetData.length, "hasVisited:", hasVisited);
     
     // Only save if there's data and it wasn't already saved by handleTemplateChoice
     if (budgetData.length > 0 && hasVisited) {
@@ -52,7 +51,6 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
       const currentData = JSON.stringify(budgetData);
       
       if (currentSavedData !== currentData) {
-        console.log("Saving updated budget data to localStorage:", budgetData.length, "items");
         localStorage.setItem("finHomeData", currentData);
       }
     }
@@ -80,14 +78,11 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
   const handleTemplateChoice = (choice: "blank" | "template") => {
-    console.log("handleTemplateChoice called with:", choice);
-    
     // Close modal immediately for better UX
     setShowWelcome(false);
     localStorage.setItem("hasVisitedFinHome", "true");
     
     if (choice === "template") {
-      console.log("Setting template data with", templateForTwo.length, "items");
       // Save the template data to localStorage immediately to ensure persistence
       localStorage.setItem("finHomeData", JSON.stringify(templateForTwo));
       
@@ -96,7 +91,6 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
         setBudgetData(templateForTwo);
       });
     } else {
-      console.log("Setting empty budget data");
       localStorage.setItem("finHomeData", JSON.stringify([]));
       setBudgetData([]);
     }
