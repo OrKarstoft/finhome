@@ -44,9 +44,7 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("hasVisitedFinHome");
-    // Only save to localStorage if we have visited before or if we explicitly have budget data
-    // This prevents saving during initial template load
-    if (hasVisited && budgetData.length > 0) {
+    if (budgetData.length > 0 || hasVisited) {
       localStorage.setItem("finHomeData", JSON.stringify(budgetData));
     }
   }, [budgetData]);
