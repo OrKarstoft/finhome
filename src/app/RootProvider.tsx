@@ -3,6 +3,7 @@
 import React, { useEffect, useState, createContext, startTransition } from "react";
 import { BudgetItem } from "./shared/types";
 import { templateForTwo } from "./shared/consts";
+import { clearCalculationCache } from "./shared/functions";
 
 interface RootContextType {
   isDarkMode: boolean;
@@ -64,18 +65,26 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [isDarkMode]);
 
-  const addBudgetItem = (item: BudgetItem) =>
+  const addBudgetItem = (item: BudgetItem) => {
+    clearCalculationCache();
     setBudgetData((prevData) => [...prevData, item]);
-  const updateBudgetItem = (updatedItem: BudgetItem) =>
+  };
+  const updateBudgetItem = (updatedItem: BudgetItem) => {
+    clearCalculationCache();
     setBudgetData((prevData) =>
       prevData.map((item) => (item.id === updatedItem.id ? updatedItem : item)),
     );
-  const deleteBudgetItem = (itemId: number) =>
+  };
+  const deleteBudgetItem = (itemId: number) => {
+    clearCalculationCache();
     setBudgetData((prevData) => prevData.filter((item) => item.id !== itemId));
-  const deleteCategory = (categoryName: string) =>
+  };
+  const deleteCategory = (categoryName: string) => {
+    clearCalculationCache();
     setBudgetData((prevData) =>
       prevData.filter((item) => item.category !== categoryName),
     );
+  };
 
   const handleTemplateChoice = (choice: "blank" | "template") => {
     // Close modal immediately for better UX
@@ -86,12 +95,16 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
       // Save the template data to localStorage immediately to ensure persistence
       localStorage.setItem("finHomeData", JSON.stringify(templateForTwo));
       
+      // Clear calculation cache before setting new data
+      clearCalculationCache();
+      
       // Use startTransition to defer the state update that triggers expensive calculations
       startTransition(() => {
         setBudgetData(templateForTwo);
       });
     } else {
       localStorage.setItem("finHomeData", JSON.stringify([]));
+      clearCalculationCache();
       setBudgetData([]);
     }
   };

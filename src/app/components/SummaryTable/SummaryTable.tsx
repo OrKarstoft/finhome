@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { CategorySummary } from "@/app/shared/types";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import {
@@ -24,7 +24,7 @@ interface SummaryTableProps {
   type: "income" | "expense";
 }
 
-export default function SummaryTable({ title, data, type }: SummaryTableProps) {
+const SummaryTable = memo(function SummaryTable({ title, data, type }: SummaryTableProps) {
   const IconComponent = type === "income" ? TrendingUp : TrendingDown;
   const color = type === "income" ? "text-green-500" : "text-red-500";
   return (
@@ -64,9 +64,9 @@ export default function SummaryTable({ title, data, type }: SummaryTableProps) {
       </div>
     </div>
   );
-}
+});
 
-function CategoryRow({ category }: { category: CategorySummary }) {
+const CategoryRow = memo(function CategoryRow({ category }: { category: CategorySummary }) {
   return (
     <tr className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 dark-mode-transition">
       <td className="px-4 py-3 font-medium text-gray-900 dark:text-white flex items-center gap-3">
@@ -95,7 +95,7 @@ function CategoryRow({ category }: { category: CategorySummary }) {
       </td>
     </tr>
   );
-}
+});
 function getCategoryIcon(category: string): React.ReactElement {
   const icons: { [key: string]: React.ComponentType<{ className?: string }> } =
     {
@@ -113,3 +113,5 @@ function getCategoryIcon(category: string): React.ReactElement {
   const IconComponent = icons[category] || icons["default"];
   return <IconComponent />;
 }
+
+export default SummaryTable;

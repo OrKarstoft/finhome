@@ -140,6 +140,7 @@ const ListViewWrapper: React.FC = () => {
   };
 
   const sortedBudgetData = useMemo(() => {
+    console.log("Sorting budget data for", budgetData.length, "items");
     return [...budgetData].sort((a, b) => {
       if (a.type !== b.type) return a.type === "income" ? -1 : 1;
       if (a.type === "income") return b.planned - a.planned;

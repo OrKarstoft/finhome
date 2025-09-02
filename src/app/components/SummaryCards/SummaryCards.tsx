@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, memo } from "react";
 import { BudgetItem } from "../../shared/types";
 import {
   getAnnualPlanned,
@@ -13,11 +13,14 @@ interface SummaryCardsProps {
   monthsPassed: number;
 }
 
-export default function SummaryCards({
+const SummaryCards = memo(function SummaryCards({
   budgetData,
   monthsPassed,
 }: SummaryCardsProps) {
   const summary = useMemo(() => {
+    console.log("SummaryCards calculations running for", budgetData.length, "items");
+    const startTime = performance.now();
+    
     let originalPlanNet = 0;
     let projectedNet = 0;
     let actualNet = 0;
@@ -30,6 +33,9 @@ export default function SummaryCards({
     });
 
     const variance = projectedNet - originalPlanNet;
+    
+    const endTime = performance.now();
+    console.log(`SummaryCards calculations completed in ${endTime - startTime}ms`);
 
     return { originalPlanNet, projectedNet, actualNet, variance };
   }, [budgetData, monthsPassed]);
@@ -83,4 +89,6 @@ export default function SummaryCards({
       />
     </div>
   );
-}
+});
+
+export default SummaryCards;

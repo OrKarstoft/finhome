@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useContext } from "react";
+import React, { useMemo, useContext, useCallback } from "react";
 import { RootContext } from "./RootProvider";
 import SummaryCards from "./components/SummaryCards/SummaryCards";
 import SummaryTable from "./components/SummaryTable/SummaryTable";
@@ -23,45 +23,83 @@ export default function Home() {
 
   const { budgetData, monthsPassed, setMonthsPassed } = context;
 
-  const summarizedData: CategorySummary[] = useMemo(() => {
-    console.log("Dashboard calculations running for", budgetData.length, "items");
+  // Memoize filtered data separately to avoid recalculating on every render
+  const nonLoanItems = useMemo(() => {
+    return budgetData.filter((x) => x.category !== "Loan");
+  }, [budgetData]);
+
+  // Memoize individual item calculations to avoid redundant work
+  const itemCalculations = useMemo(() => {
+    console.log("Calculating item-level data for", nonLoanItems.length, "items");
     const startTime = performance.now();
     
-    const summary: Record<string, CategorySummary> = budgetData
-      .filter((x) => x.category != "Loan")
-      .reduce(
-        (acc, item) => {
-          if (!acc[item.category]) {
-            acc[item.category] = {
-              name: item.category,
-              type: item.type,
-              monthlyEquivalent: 0,
-              totalAnnualPlanned: 0,
-              totalAnnualProjected: 0,
-              actual: 0,
-              plannedYTD: 0,
-            };
-          }
-          acc[item.category].monthlyEquivalent += getMonthlyEquivalent(item);
-          acc[item.category].totalAnnualPlanned += getAnnualPlanned(item);
-          acc[item.category].totalAnnualProjected += getProjectedAnnual(
-            item,
-            monthsPassed,
-          );
-          acc[item.category].actual += getCorrectedYTD(item, monthsPassed);
-          acc[item.category].plannedYTD += getPlannedYTD(item, monthsPassed);
-          return acc;
-        },
-        {} as Record<string, CategorySummary>,
-      );
+    const calculations = new Map();
+    
+    nonLoanItems.forEach((item) => {
+      calculations.set(item.id, {
+        monthlyEquivalent: getMonthlyEquivalent(item),
+        totalAnnualPlanned: getAnnualPlanned(item),
+        totalAnnualProjected: getProjectedAnnual(item, monthsPassed),
+        actual: getCorrectedYTD(item, monthsPassed),
+        plannedYTD: getPlannedYTD(item, monthsPassed),
+      });
+    });
     
     const endTime = performance.now();
-    console.log(`Dashboard calculations completed in ${endTime - startTime}ms`);
-    return Object.values(summary);
-  }, [budgetData, monthsPassed]);
+    console.log(`Item calculations completed in ${endTime - startTime}ms`);
+    return calculations;
+  }, [nonLoanItems, monthsPassed]);
 
-  const incomeData = summarizedData.filter((item) => item.type === "income");
-  const expenseData = summarizedData.filter((item) => item.type === "expense");
+  // Aggregate the pre-calculated values into category summaries
+  const summarizedData: CategorySummary[] = useMemo(() => {
+    console.log("Aggregating category summaries");
+    const startTime = performance.now();
+    
+    const summary: Record<string, CategorySummary> = {};
+    
+    nonLoanItems.forEach((item) => {
+      const calc = itemCalculations.get(item.id);
+      if (!calc) return;
+      
+      if (!summary[item.category]) {
+        summary[item.category] = {
+          name: item.category,
+          type: item.type,
+          monthlyEquivalent: 0,
+          totalAnnualPlanned: 0,
+          totalAnnualProjected: 0,
+          actual: 0,
+          plannedYTD: 0,
+        };
+      }
+      
+      summary[item.category].monthlyEquivalent += calc.monthlyEquivalent;
+      summary[item.category].totalAnnualPlanned += calc.totalAnnualPlanned;
+      summary[item.category].totalAnnualProjected += calc.totalAnnualProjected;
+      summary[item.category].actual += calc.actual;
+      summary[item.category].plannedYTD += calc.plannedYTD;
+    });
+    
+    const endTime = performance.now();
+    console.log(`Category aggregation completed in ${endTime - startTime}ms`);
+    return Object.values(summary);
+  }, [nonLoanItems, itemCalculations]);
+
+  // Memoize the filtered data to avoid recalculating
+  const incomeData = useMemo(() => 
+    summarizedData.filter((item) => item.type === "income"), 
+    [summarizedData]
+  );
+  
+  const expenseData = useMemo(() => 
+    summarizedData.filter((item) => item.type === "expense"), 
+    [summarizedData]
+  );
+
+  // Memoize the months passed handler to prevent unnecessary re-renders
+  const handleMonthsPassedChange = useCallback((value: number) => {
+    setMonthsPassed(value);
+  }, [setMonthsPassed]);
 
   return (
     <>
@@ -89,7 +127,7 @@ export default function Home() {
           min="1"
           max="12"
           value={monthsPassed}
-          onChange={(e) => setMonthsPassed(Number(e.target.value))}
+          onChange={(e) => handleMonthsPassedChange(Number(e.target.value))}
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
         />
         <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
