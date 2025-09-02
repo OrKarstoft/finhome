@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, createContext, startTransition } from "react";
+import React, { useEffect, useState, createContext, useMemo, useCallback, startTransition } from "react";
 import { BudgetItem } from "./shared/types";
 import { templateForTwo } from "./shared/consts";
 
@@ -72,19 +72,22 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
       prevData.filter((item) => item.category !== categoryName),
     );
 
-  const handleTemplateChoice = (choice: "blank" | "template") => {
+  // Memoize templateForTwo to prevent unnecessary re-renders
+  const memoizedTemplateForTwo = useMemo(() => templateForTwo, []);
+
+  const handleTemplateChoice = useCallback((choice: "blank" | "template") => {
     setShowWelcome(false);
     localStorage.setItem("hasVisitedFinHome", "true");
     
-    // Use setTimeout to defer the data update and localStorage save
-    setTimeout(() => {
+    // Use startTransition to make the state update non-blocking
+    startTransition(() => {
       if (choice === "template") {
-        setBudgetData(templateForTwo);
+        setBudgetData(memoizedTemplateForTwo);
       } else {
         setBudgetData([]);
       }
-    }, 100);
-  };
+    });
+  }, [memoizedTemplateForTwo]);
 
   const contextValue: RootContextType = {
     isDarkMode,
