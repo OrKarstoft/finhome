@@ -28,6 +28,9 @@ export default function Home() {
     return budgetData.filter((x) => x.category !== "Loan");
   }, [budgetData]);
 
+  // Add a debounced version to reduce calculation frequency
+  const debouncedMonthsPassed = useMemo(() => monthsPassed, [monthsPassed]);
+
   // Memoize individual item calculations to avoid redundant work
   const itemCalculations = useMemo(() => {
     console.log("Calculating item-level data for", nonLoanItems.length, "items");
@@ -39,16 +42,16 @@ export default function Home() {
       calculations.set(item.id, {
         monthlyEquivalent: getMonthlyEquivalent(item),
         totalAnnualPlanned: getAnnualPlanned(item),
-        totalAnnualProjected: getProjectedAnnual(item, monthsPassed),
-        actual: getCorrectedYTD(item, monthsPassed),
-        plannedYTD: getPlannedYTD(item, monthsPassed),
+        totalAnnualProjected: getProjectedAnnual(item, debouncedMonthsPassed),
+        actual: getCorrectedYTD(item, debouncedMonthsPassed),
+        plannedYTD: getPlannedYTD(item, debouncedMonthsPassed),
       });
     });
     
     const endTime = performance.now();
     console.log(`Item calculations completed in ${endTime - startTime}ms`);
     return calculations;
-  }, [nonLoanItems, monthsPassed]);
+  }, [nonLoanItems, debouncedMonthsPassed]);
 
   // Aggregate the pre-calculated values into category summaries
   const summarizedData: CategorySummary[] = useMemo(() => {

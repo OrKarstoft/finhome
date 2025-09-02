@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, createContext, startTransition } from "react";
+import React, { useEffect, useState, createContext, startTransition, useMemo, useCallback } from "react";
 import { BudgetItem } from "./shared/types";
 import { templateForTwo } from "./shared/consts";
 import { clearCalculationCache } from "./shared/functions";
@@ -65,28 +65,31 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [isDarkMode]);
 
-  const addBudgetItem = (item: BudgetItem) => {
+  const addBudgetItem = useCallback((item: BudgetItem) => {
     clearCalculationCache();
     setBudgetData((prevData) => [...prevData, item]);
-  };
-  const updateBudgetItem = (updatedItem: BudgetItem) => {
+  }, []);
+  
+  const updateBudgetItem = useCallback((updatedItem: BudgetItem) => {
     clearCalculationCache();
     setBudgetData((prevData) =>
       prevData.map((item) => (item.id === updatedItem.id ? updatedItem : item)),
     );
-  };
-  const deleteBudgetItem = (itemId: number) => {
+  }, []);
+  
+  const deleteBudgetItem = useCallback((itemId: number) => {
     clearCalculationCache();
     setBudgetData((prevData) => prevData.filter((item) => item.id !== itemId));
-  };
-  const deleteCategory = (categoryName: string) => {
+  }, []);
+  
+  const deleteCategory = useCallback((categoryName: string) => {
     clearCalculationCache();
     setBudgetData((prevData) =>
       prevData.filter((item) => item.category !== categoryName),
     );
-  };
+  }, []);
 
-  const handleTemplateChoice = (choice: "blank" | "template") => {
+  const handleTemplateChoice = useCallback((choice: "blank" | "template") => {
     // Close modal immediately for better UX
     setShowWelcome(false);
     localStorage.setItem("hasVisitedFinHome", "true");
@@ -107,9 +110,9 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
       clearCalculationCache();
       setBudgetData([]);
     }
-  };
+  }, []);
 
-  const contextValue: RootContextType = {
+  const contextValue: RootContextType = useMemo(() => ({
     isDarkMode,
     setIsDarkMode,
     view,
@@ -124,7 +127,18 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
     setMonthsPassed,
     showWelcome,
     handleTemplateChoice,
-  };
+  }), [
+    isDarkMode,
+    view,
+    budgetData,
+    monthsPassed,
+    showWelcome,
+    addBudgetItem,
+    updateBudgetItem,
+    deleteBudgetItem,
+    deleteCategory,
+    handleTemplateChoice,
+  ]);
 
   return (
     <RootContext.Provider value={contextValue}>{children}</RootContext.Provider>

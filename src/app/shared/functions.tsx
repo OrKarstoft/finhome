@@ -5,7 +5,9 @@ import { BudgetItem } from "./types";
 const calculationCache = new Map<string, number>();
 
 const getCacheKey = (item: BudgetItem, func: string, monthsPassed?: number): string => {
-  return `${item.id}-${func}-${monthsPassed || 'all'}-${JSON.stringify(item.corrections)}`;
+  // Use a more stable cache key that's less likely to change
+  const correctionHash = item.corrections.length > 0 ? JSON.stringify(item.corrections) : 'none';
+  return `${item.id}-${item.planned}-${item.paymentMonths.join(',')}-${func}-${monthsPassed || 'all'}-${correctionHash}`;
 };
 
 export const getAnnualPlanned = (item: BudgetItem): number => {
@@ -85,6 +87,7 @@ export const getMonthlyEquivalent = (item: BudgetItem): number => {
 
 // Clear cache when needed (e.g., when budget data changes significantly)
 export const clearCalculationCache = (): void => {
+  console.log('Clearing calculation cache, had', calculationCache.size, 'entries');
   calculationCache.clear();
 };
 
