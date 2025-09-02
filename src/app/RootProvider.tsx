@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, createContext, useMemo, useCallback, startTransition } from "react";
+import React, { useEffect, useState, createContext, useMemo, useCallback, startTransition, useRef } from "react";
 import { BudgetItem } from "./shared/types";
 import { templateForTwo } from "./shared/consts";
 
@@ -31,6 +31,7 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
   const [budgetData, setBudgetData] = useState<BudgetItem[]>([]);
   const [monthsPassed, setMonthsPassed] = useState(new Date().getMonth() + 1);
   const [showWelcome, setShowWelcome] = useState(false);
+  const justSetTemplateRef = useRef(false);
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("hasVisitedFinHome");
@@ -43,9 +44,19 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisitedFinHome");
-    if (budgetData.length > 0 || hasVisited) {
+    if (justSetTemplateRef.current) {
       localStorage.setItem("finHomeData", JSON.stringify(budgetData));
+      justSetTemplateRef.current = false;
+    } else {
+      const hasVisited = localStorage.getItem("hasVisitedFinHome");
+      if (hasVisited && budgetData.length > 0) {
+        const savedData = localStorage.getItem("finHomeData");
+        const currentSavedData = savedData ? JSON.parse(savedData) : [];
+        // Only save if the data is actually different
+        if (JSON.stringify(currentSavedData) !== JSON.stringify(budgetData)) {
+          localStorage.setItem("finHomeData", JSON.stringify(budgetData));
+        }
+      }
     }
   }, [budgetData]);
 
@@ -79,6 +90,7 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
     
     // Use startTransition to make the state update non-blocking
     startTransition(() => {
+      justSetTemplateRef.current = true;
       if (choice === "template") {
         setBudgetData(memoizedTemplateForTwo);
       } else {
