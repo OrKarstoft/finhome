@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState, createContext, startTransition } from "react";
 import { BudgetItem } from "./shared/types";
 import { templateForTwo } from "./shared/consts";
 
@@ -44,7 +44,9 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("hasVisitedFinHome");
-    if (budgetData.length > 0 || hasVisited) {
+    // Only save to localStorage if we have visited before or if we explicitly have budget data
+    // This prevents saving during initial template load
+    if (hasVisited && budgetData.length > 0) {
       localStorage.setItem("finHomeData", JSON.stringify(budgetData));
     }
   }, [budgetData]);
@@ -71,13 +73,17 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
   const handleTemplateChoice = (choice: "blank" | "template") => {
-    if (choice === "template") {
-      setBudgetData(templateForTwo);
-    } else {
-      setBudgetData([]);
-    }
     setShowWelcome(false);
     localStorage.setItem("hasVisitedFinHome", "true");
+    
+    // Use setTimeout to defer the data update and localStorage save
+    setTimeout(() => {
+      if (choice === "template") {
+        setBudgetData(templateForTwo);
+      } else {
+        setBudgetData([]);
+      }
+    }, 100);
   };
 
   const contextValue: RootContextType = {
