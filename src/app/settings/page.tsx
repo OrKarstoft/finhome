@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useMemo, useContext } from "react";
-import { rootContext } from "../layout";
+import { RootContext } from "../RootProvider";
 import { ConfirmationModal } from "../budget/components/ConfirmationModal/ConfirmationModal";
 import { Trash2 } from "lucide-react";
 
 export default function Settings() {
-  const context = useContext(rootContext);
+  const context = useContext(RootContext);
   if (!context) throw new Error("Context not found");
   const { budgetData, setBudgetData, deleteCategory } = context;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useContext } from "react";
-import { rootContext } from "./layout";
+import { RootContext } from "./RootProvider";
 import SummaryCards from "./components/SummaryCards/SummaryCards";
 import SummaryTable from "./components/SummaryTable/SummaryTable";
 import LoanPayoffWidget from "./components/LoanPayoffWidget/LoanPayoffWidget";
@@ -15,7 +15,7 @@ import {
 import { CategorySummary } from "./shared/types";
 
 export default function Home() {
-  const context = useContext(rootContext);
+  const context = useContext(RootContext);
   if (!context)
     throw new Error(
       "Context not found. Ensure Dashboard is wrapped in rootContext.Provider.",

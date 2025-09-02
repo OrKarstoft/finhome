@@ -3,7 +3,7 @@
 import React from "react";
 import { useState, useMemo, useContext } from "react";
 import { Plus } from "lucide-react";
-import { rootContext } from "../layout";
+import { RootContext } from "../RootProvider";
 import Modal from "../components/Modal/Modal";
 import { ItemForm } from "./components/ItemForm/ItemForm";
 import { Edit } from "../shared/icons";
@@ -17,7 +17,7 @@ import {
 import { Tooltip } from "../components/Tooltip/Tooltip";
 
 const BudgetPage: React.FC = () => {
-  const context = useContext(rootContext);
+  const context = useContext(RootContext);
   if (!context) throw new Error("Context not found");
   const { budgetData, addBudgetItem, updateBudgetItem, deleteBudgetItem } =
     context;
@@ -105,7 +105,7 @@ const BudgetPage: React.FC = () => {
 
 // This wrapper is needed because ListView now has its own state for editing
 const ListViewWrapper: React.FC = () => {
-  const context = useContext(rootContext);
+  const context = useContext(RootContext);
   if (!context) throw new Error("Context not found");
   const {
     budgetData,
@@ -335,7 +335,7 @@ const ListViewWrapper: React.FC = () => {
 //   );
 // };
 const MonthlyView: React.FC = () => {
-  const context = useContext(rootContext);
+  const context = useContext(RootContext);
   if (!context) throw new Error("Context not found");
   const { budgetData, monthsPassed } = context;
 
