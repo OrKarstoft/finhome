@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, createContext, useMemo, useCallback, startTransition, useRef } from "react";
+import React, { useEffect, useState, createContext, useMemo, useCallback, startTransition } from "react";
 import { BudgetItem } from "./shared/types";
 import { templateForTwo } from "./shared/consts";
 
@@ -32,8 +32,8 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
   const [monthsPassed, setMonthsPassed] = useState(new Date().getMonth() + 1);
   const [showWelcome, setShowWelcome] = useState(false);
   
-  // Use ref to track when template data is being set to avoid race conditions
-  const justSetTemplateRef = useRef(false);
+  // Track when template data is being applied
+  const [isSettingTemplate, setIsSettingTemplate] = useState(false);
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("hasVisitedFinHome");
@@ -46,18 +46,20 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    console.log("useEffect for saving data triggered, budgetData.length:", budgetData.length);
+    console.log("useEffect for saving data triggered, budgetData.length:", budgetData.length, "isSettingTemplate:", isSettingTemplate);
     const hasVisited = localStorage.getItem("hasVisitedFinHome");
     
-    // Save data immediately if we just set template data, or if there's data and the user has visited
-    if (justSetTemplateRef.current || (hasVisited && budgetData.length > 0)) {
+    // Save data immediately if we're setting template data, or if there's data and the user has visited
+    if (isSettingTemplate || (hasVisited && budgetData.length > 0)) {
       console.log("Saving data to localStorage");
       localStorage.setItem("finHomeData", JSON.stringify(budgetData));
-      justSetTemplateRef.current = false; // Reset the flag
+      if (isSettingTemplate) {
+        setIsSettingTemplate(false); // Reset the flag
+      }
     } else {
       console.log("Not saving data - hasVisited:", hasVisited, "budgetData.length:", budgetData.length);
     }
-  }, [budgetData]);
+  }, [budgetData, isSettingTemplate]);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -91,8 +93,8 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
     
     if (choice === "template") {
       console.log("Setting template data with", memoizedTemplateForTwo.length, "items");
-      // Mark that we're setting template data for the save logic
-      justSetTemplateRef.current = true;
+      // Set flag to indicate we're applying template data
+      setIsSettingTemplate(true);
       // Use startTransition to prevent the UI from freezing during expensive calculations
       startTransition(() => {
         setBudgetData(memoizedTemplateForTwo);
