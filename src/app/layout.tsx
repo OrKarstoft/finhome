@@ -39,7 +39,6 @@ function InnerLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     localStorage.setItem("hasVisitedFinHome", "true");
 
     if (choice === "template") {
-      console.log("Template chosen");
       setBudgetData(templateForTwo);
     } else {
       setBudgetData([]);
