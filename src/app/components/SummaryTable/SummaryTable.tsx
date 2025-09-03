@@ -1,21 +1,9 @@
 "use client";
 
-import React, { useMemo, memo } from "react";
+import React, { memo } from "react";
 import { CategorySummary } from "@/app/shared/types";
 import ProgressBar from "../ProgressBar/ProgressBar";
-import {
-  Banknote,
-  Car,
-  Film,
-  PiggyBank,
-  Plus,
-  Target,
-  TrendingDown,
-  TrendingUp,
-  Utensils,
-} from "@/app/shared/icons";
-import Home from "@/app/page";
-import { Repeat2 } from "lucide-react";
+import { TrendingDown, TrendingUp } from "@/app/shared/icons";
 
 interface SummaryTableProps {
   title: string;
@@ -78,6 +66,7 @@ const CategoryRow = memo(function CategoryRow({
   return (
     <tr className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 dark-mode-transition">
       <td className="px-4 py-3 font-medium text-gray-900 dark:text-white flex items-center gap-3">
+        {/* <CategoryIcon category={category.name} /> */}
         {category.name}
       </td>
       <td className="px-4 py-3 text-gray-600 dark:text-gray-300">
@@ -105,22 +94,23 @@ const CategoryRow = memo(function CategoryRow({
   );
 });
 
-function getCategoryIcon(category: string): React.ReactElement {
-  const icons: { [key: string]: React.ComponentType<{ className?: string }> } =
-    {
-      Salary: Banknote,
-      Freelance: Plus,
-      Housing: Home,
-      Groceries: Utensils,
-      Transportation: Car,
-      Entertainment: Film,
-      Savings: PiggyBank,
-      Loan: Banknote,
-      Subscriptions: Repeat2,
-      default: Target,
-    };
-  const IconComponent = icons[category] || icons["default"];
-  return useMemo(() => <IconComponent />, []);
-}
+// TODO: Find a way to handle icons properly
+// function CategoryIcon({ category }: { category: string }) {
+//   const icons: { [key: string]: React.ComponentType<{ className?: string }> } =
+//     {
+//       Salary: Banknote,
+//       Freelance: Plus,
+//       Housing: Home,
+//       Groceries: Utensils,
+//       Transportation: Car,
+//       Entertainment: Film,
+//       Savings: PiggyBank,
+//       Loan: Banknote,
+//       Subscriptions: Repeat2,
+//       default: Target,
+//     };
+//   const IconComponent = icons[category] || icons["default"];
+//   return useMemo(() => <IconComponent />, []);
+// }
 
 export default SummaryTable;

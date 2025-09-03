@@ -78,11 +78,11 @@ export default function Settings() {
     <div>
       {categoryToDelete && (
         <ConfirmationModal
-          onConfirm={() => {
+          onConfirmAction={() => {
             deleteCategory(categoryToDelete);
             setCategoryToDelete(null);
           }}
-          onCancel={() => setCategoryToDelete(null)}
+          onCancelAction={() => setCategoryToDelete(null)}
         />
       )}
       <header className="mb-8">

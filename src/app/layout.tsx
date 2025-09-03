@@ -34,16 +34,19 @@ function InnerLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const { showWelcome, setShowWelcome, setBudgetData } = context;
   const pathname = usePathname();
 
-  const handleTemplateAction = useCallback((choice: "blank" | "template") => {
-    setShowWelcome(false);
-    localStorage.setItem("hasVisitedFinHome", "true");
+  const handleTemplateAction = useCallback(
+    (choice: "blank" | "template") => {
+      setShowWelcome(false);
+      localStorage.setItem("hasVisitedFinHome", "true");
 
-    if (choice === "template") {
-      setBudgetData(templateForTwo);
-    } else {
-      setBudgetData([]);
-    }
-  }, []);
+      if (choice === "template") {
+        setBudgetData(templateForTwo);
+      } else {
+        setBudgetData([]);
+      }
+    },
+    [setShowWelcome, setBudgetData],
+  );
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen font-sans text-gray-800 dark:text-gray-200 dark-mode-transition">
       {showWelcome && <WelcomeModal action={handleTemplateAction} />}
