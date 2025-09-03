@@ -36,7 +36,7 @@ function InnerLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 
   const handleTemplateAction = useCallback((choice: "blank" | "template") => {
     setShowWelcome(false);
-    // localStorage.setItem("hasVisitedFinHome", "true");
+    localStorage.setItem("hasVisitedFinHome", "true");
 
     if (choice === "template") {
       console.log("Template chosen");
