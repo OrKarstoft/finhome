@@ -134,8 +134,8 @@ export const ItemForm: React.FC<ItemFormProps> = ({
     <>
       {showDeleteConfirm && (
         <ConfirmationModal
-          onConfirm={handleDelete}
-          onCancel={() => setShowDeleteConfirm(false)}
+          onConfirmAction={handleDelete}
+          onCancelAction={() => setShowDeleteConfirm(false)}
         />
       )}
       <div className="dark-mode-transition">

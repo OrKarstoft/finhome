@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, memo } from "react";
 import { BudgetItem } from "../../shared/types";
 import {
   getAnnualPlanned,
@@ -8,12 +8,12 @@ import {
   getProjectedAnnual,
 } from "../../shared/functions";
 
-interface SummaryCardsProps {
+type SummaryCardsProps = {
   budgetData: BudgetItem[];
   monthsPassed: number;
-}
+};
 
-export default function SummaryCards({
+const SummaryCards = memo(function SummaryCards({
   budgetData,
   monthsPassed,
 }: SummaryCardsProps) {
@@ -83,4 +83,6 @@ export default function SummaryCards({
       />
     </div>
   );
-}
+});
+
+export default SummaryCards;

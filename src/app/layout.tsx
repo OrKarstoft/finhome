@@ -1,12 +1,13 @@
 "use client";
 
 import "./globals.css";
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import { WelcomeModal } from "./components/WelcomeModal/WelcomeModal";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Cog } from "lucide-react";
 import { RootProvider, RootContext } from "./RootProvider";
+import { templateForTwo } from "./shared/consts";
 
 export default function RootLayout({
   children,
@@ -16,7 +17,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* Wrapping content in RootProvider context handler */}
         <RootProvider>
           <InnerLayout>{children}</InnerLayout>
         </RootProvider>
@@ -31,12 +31,23 @@ function InnerLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     throw new Error(
       "Context not found. Ensure Dashboard is wrapped in rootContext.Provider.",
     );
-  const { showWelcome } = context;
+  const { showWelcome, setShowWelcome, setBudgetData } = context;
   const pathname = usePathname();
 
+  const handleTemplateAction = useCallback((choice: "blank" | "template") => {
+    setShowWelcome(false);
+    // localStorage.setItem("hasVisitedFinHome", "true");
+
+    if (choice === "template") {
+      console.log("Template chosen");
+      setBudgetData(templateForTwo);
+    } else {
+      setBudgetData([]);
+    }
+  }, []);
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen font-sans text-gray-800 dark:text-gray-200 dark-mode-transition">
-      {showWelcome && <WelcomeModal />}
+      {showWelcome && <WelcomeModal action={handleTemplateAction} />}
       <div className="container mx-auto p-4 sm:p-6 lg:p-8">
         <div className="text-center py-4 lg:px-4">
           <div

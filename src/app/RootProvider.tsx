@@ -1,14 +1,11 @@
 "use client";
 
-import React, { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState, useCallback, createContext } from "react";
 import { BudgetItem } from "./shared/types";
-import { templateForTwo } from "./shared/consts";
 
 interface RootContextType {
   isDarkMode: boolean;
   setIsDarkMode: (value: boolean) => void;
-  view: string;
-  setView: (view: string) => void;
   budgetData: BudgetItem[];
   setBudgetData: (data: BudgetItem[]) => void;
   addBudgetItem: (item: BudgetItem) => void;
@@ -18,7 +15,7 @@ interface RootContextType {
   monthsPassed: number;
   setMonthsPassed: (value: number) => void;
   showWelcome: boolean;
-  handleTemplateChoice: (choice: "blank" | "template") => void;
+  setShowWelcome: (value: boolean) => void;
 }
 
 export const RootContext = createContext<RootContextType | null>(null);
@@ -27,7 +24,6 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [view, setView] = useState("dashboard");
   const [budgetData, setBudgetData] = useState<BudgetItem[]>([]);
   const [monthsPassed, setMonthsPassed] = useState(new Date().getMonth() + 1);
   const [showWelcome, setShowWelcome] = useState(false);
@@ -57,34 +53,37 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [isDarkMode]);
 
-  const addBudgetItem = (item: BudgetItem) =>
-    setBudgetData((prevData) => [...prevData, item]);
-  const updateBudgetItem = (updatedItem: BudgetItem) =>
-    setBudgetData((prevData) =>
-      prevData.map((item) => (item.id === updatedItem.id ? updatedItem : item)),
-    );
-  const deleteBudgetItem = (itemId: number) =>
-    setBudgetData((prevData) => prevData.filter((item) => item.id !== itemId));
-  const deleteCategory = (categoryName: string) =>
-    setBudgetData((prevData) =>
-      prevData.filter((item) => item.category !== categoryName),
-    );
-
-  const handleTemplateChoice = (choice: "blank" | "template") => {
-    if (choice === "template") {
-      setBudgetData(templateForTwo);
-    } else {
-      setBudgetData([]);
-    }
-    setShowWelcome(false);
-    localStorage.setItem("hasVisitedFinHome", "true");
-  };
+  const addBudgetItem = useCallback(
+    (item: BudgetItem) => setBudgetData((prevData) => [...prevData, item]),
+    [],
+  );
+  const updateBudgetItem = useCallback(
+    (updatedItem: BudgetItem) =>
+      setBudgetData((prevData) =>
+        prevData.map((item) =>
+          item.id === updatedItem.id ? updatedItem : item,
+        ),
+      ),
+    [],
+  );
+  const deleteBudgetItem = useCallback(
+    (itemId: number) =>
+      setBudgetData((prevData) =>
+        prevData.filter((item) => item.id !== itemId),
+      ),
+    [],
+  );
+  const deleteCategory = useCallback(
+    (categoryName: string) =>
+      setBudgetData((prevData) =>
+        prevData.filter((item) => item.category !== categoryName),
+      ),
+    [],
+  );
 
   const contextValue: RootContextType = {
     isDarkMode,
     setIsDarkMode,
-    view,
-    setView,
     budgetData,
     setBudgetData,
     addBudgetItem,
@@ -94,7 +93,7 @@ export const RootProvider: React.FC<{ children: React.ReactNode }> = ({
     monthsPassed,
     setMonthsPassed,
     showWelcome,
-    handleTemplateChoice,
+    setShowWelcome,
   };
 
   return (
