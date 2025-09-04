@@ -5,7 +5,7 @@ import React, { useContext, useState } from "react";
 import { WelcomeModal } from "./components/WelcomeModal/WelcomeModal";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Cog, Menu } from "lucide-react";
+import { Cog, Menu, X } from "lucide-react";
 import { RootProvider, RootContext } from "./RootProvider";
 
 export default function RootLayout({
@@ -71,7 +71,7 @@ function InnerLayout({ children }: Readonly<{ children: React.ReactNode }>) {
                   aria-expanded="false"
                 >
                   <span className="sr-only">Open main menu</span>
-                  {isMenuOpen ? "X" : <Menu className="block h-6 w-6" />}
+                  {isMenuOpen ? <X /> : <Menu className="block h-6 w-6" />}
                 </button>
               </div>
               <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
@@ -95,23 +95,25 @@ function InnerLayout({ children }: Readonly<{ children: React.ReactNode }>) {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center">
-                <Link
-                  href="/settings"
-                  className="p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                >
-                  <Cog className="h-6 w-6" />
-                </Link>
-                {/* <button */}
-                {/*   className="ml-2 p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" */}
-                {/*   onClick={() => setIsDarkMode(!isDarkMode)} */}
-                {/* > */}
-                {/*   {isDarkMode ? ( */}
-                {/*     <SunIcon className="h-6 w-6" /> */}
-                {/*   ) : ( */}
-                {/*     <MoonIcon className="h-6 w-6" /> */}
-                {/*   )} */}
-                {/* </button> */}
+              <div className="hidden sm:block sm:ml-6">
+                <div className="flex space-x-4">
+                  <Link
+                    href="/settings"
+                    className="p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                  >
+                    <Cog className="h-6 w-6" />
+                  </Link>
+                  {/* <button */}
+                  {/*   className="ml-2 p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" */}
+                  {/*   onClick={() => setIsDarkMode(!isDarkMode)} */}
+                  {/* > */}
+                  {/*   {isDarkMode ? ( */}
+                  {/*     <SunIcon className="h-6 w-6" /> */}
+                  {/*   ) : ( */}
+                  {/*     <MoonIcon className="h-6 w-6" /> */}
+                  {/*   )} */}
+                  {/* </button> */}
+                </div>
               </div>
             </div>
           </div>
