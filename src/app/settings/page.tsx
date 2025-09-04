@@ -12,6 +12,7 @@ export default function Settings() {
 
   const [exportString, setExportString] = useState("");
   const [importString, setImportString] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
 
@@ -78,11 +79,12 @@ export default function Settings() {
     <div>
       {categoryToDelete && (
         <ConfirmationModal
-          onConfirm={() => {
+          onConfirmAction={() => {
             deleteCategory(categoryToDelete);
             setCategoryToDelete(null);
           }}
-          onCancel={() => setCategoryToDelete(null)}
+          onCancelAction={() => setCategoryToDelete(null)}
+          message="Are you sure you want to delete this item? This action cannot be undone."
         />
       )}
       <header className="mb-8">
@@ -169,6 +171,21 @@ export default function Settings() {
             Load Data
           </button>
         </div>
+        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 dark-mode-transition">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-700 dark:text-gray-300">
+            Delete Data
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            Delete all your budget data and start fresh. This action cannot be
+            undone.
+          </p>
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="mt-2 py-2 px-4 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+          >
+            Load Data
+          </button>
+        </div>
       </div>
       {message.text && (
         <div
@@ -176,6 +193,16 @@ export default function Settings() {
         >
           {message.text}
         </div>
+      )}
+      {showDeleteModal && (
+        <ConfirmationModal
+          onConfirmAction={() => {
+            setBudgetData([]);
+            setShowDeleteModal(false);
+          }}
+          onCancelAction={() => setShowDeleteModal(false)}
+          message="Are you sure you want to delete all budget data? This action cannot be undone."
+        />
       )}
     </div>
   );
