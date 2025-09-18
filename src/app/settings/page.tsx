@@ -14,6 +14,7 @@ export default function Settings() {
   const [importString, setImportString] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const allCategories = useMemo(
     () =>
