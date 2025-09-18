@@ -3,19 +3,14 @@
 import React from "react";
 import { PiggyBank, Target, Edit, Settings } from "lucide-react";
 import Modal from "../Modal/Modal";
-import { RootContext } from "../../RootProvider";
 
-export const WelcomeModal: React.FC = () => {
-  // initialise context
-  const context = React.useContext(RootContext);
-  if (!context)
-    throw new Error(
-      "Context not found. Ensure WelcomeModal is wrapped in rootContext.Provider.",
-    );
-  const { handleTemplateChoice } = context;
+type WelcomeModalProps = {
+  action: (choice: "blank" | "template") => void;
+};
 
+export const WelcomeModal = ({ action }: WelcomeModalProps) => {
   return (
-    <Modal onClose={() => handleTemplateChoice("blank")}>
+    <Modal onClose={() => action("blank")}>
       <div className="text-center">
         <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500">
           <PiggyBank className="h-8 w-8 text-white" />
@@ -75,13 +70,13 @@ export const WelcomeModal: React.FC = () => {
       </div>
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
         <button
-          onClick={() => handleTemplateChoice("blank")}
+          onClick={() => action("blank")}
           className="w-full py-3 px-4 text-sm font-semibold rounded-lg text-indigo-600 bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-300 dark:hover:bg-indigo-900/70 transition-colors"
         >
           Start with a Blank Slate
         </button>
         <button
-          onClick={() => handleTemplateChoice("template")}
+          onClick={() => action("template")}
           className="w-full py-3 px-4 text-sm font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
         >
           Use a Template for Two

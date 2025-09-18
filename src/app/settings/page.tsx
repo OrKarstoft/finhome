@@ -12,9 +12,9 @@ export default function Settings() {
 
   const [exportString, setExportString] = useState("");
   const [importString, setImportString] = useState("");
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const allCategories = useMemo(
     () =>
@@ -183,7 +183,7 @@ export default function Settings() {
             onClick={() => setShowDeleteModal(true)}
             className="mt-2 py-2 px-4 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
           >
-            Load Data
+            Delete Data
           </button>
         </div>
       </div>

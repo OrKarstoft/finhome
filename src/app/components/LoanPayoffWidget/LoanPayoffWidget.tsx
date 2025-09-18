@@ -1,14 +1,16 @@
 "use client";
 
-import { BudgetItem } from "@/app/shared/types";
+import React from "react";
+import { BudgetItem } from "../../shared/types";
 import ProgressBar from "../ProgressBar/ProgressBar";
-import { Banknote } from "@/app/shared/icons";
-import { getCorrectedYTD, getPlannedYTD } from "@/app/shared/functions";
+import { Banknote } from "../../shared/icons";
+import { getCorrectedYTD, getPlannedYTD } from "../../shared/functions";
 
 interface LoanPayoffWidgetProps {
   budgetData: BudgetItem[];
   monthsPassed: number;
 }
+
 export default function LoanPayoffWidget({
   budgetData,
   monthsPassed,

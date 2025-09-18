@@ -6,7 +6,6 @@ import Modal from "../../../components/Modal/Modal";
 export function ConfirmationModal({
   onConfirmAction,
   onCancelAction,
-  message,
 }: {
   onConfirmAction: () => void;
   onCancelAction: () => void;
