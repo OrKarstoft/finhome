@@ -10,6 +10,7 @@ interface LoanPayoffWidgetProps {
   budgetData: BudgetItem[];
   monthsPassed: number;
 }
+
 export default function LoanPayoffWidget({
   budgetData,
   monthsPassed,

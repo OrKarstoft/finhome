@@ -136,6 +136,7 @@ export const ItemForm: React.FC<ItemFormProps> = ({
         <ConfirmationModal
           onConfirmAction={handleDelete}
           onCancelAction={() => setShowDeleteConfirm(false)}
+          message="Are you sure you want to delete this item? This action cannot be undone."
         />
       )}
       <div className="dark-mode-transition">

@@ -136,32 +136,3 @@ export const templateForTwo: BudgetItem[] = [
     corrections: [],
   },
 ];
-export const templateSmall: BudgetItem[] = [
-  {
-    id: 1,
-    itemName: "Person 1 Salary",
-    category: "Salary",
-    type: "income",
-    planned: 28000,
-    paymentMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    corrections: [],
-  },
-  {
-    id: 2,
-    itemName: "Rent/Mortgage",
-    category: "Housing",
-    type: "expense",
-    planned: 12000,
-    paymentMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    corrections: [],
-  },
-  {
-    id: 3,
-    itemName: "Groceries",
-    category: "Groceries",
-    type: "expense",
-    planned: 4500,
-    paymentMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    corrections: [],
-  },
-];

@@ -9,15 +9,14 @@ export function ConfirmationModal({
 }: {
   onConfirmAction: () => void;
   onCancelAction: () => void;
+  message: string;
 }) {
   return (
     <Modal onClose={onCancelAction}>
       <h3 className="text-xl font-bold text-gray-800 dark:text-white">
         Confirm Deletion
       </h3>
-      <p className="text-gray-600 dark:text-gray-300 mt-2">
-        Are you sure you want to delete this item? This action cannot be undone.
-      </p>
+      <p className="text-gray-600 dark:text-gray-300 mt-2">{message}</p>
       <div className="flex justify-end gap-4 mt-6">
         <button
           onClick={onCancelAction}
