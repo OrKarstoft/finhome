@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FinHome
 
-## Getting Started
+**Home Budget Tool — Built for Real-World Flexibility**
 
-First, run the development server:
+[![Live Demo](https://img.shields.io/badge/demo-finhome.karstoft.pro-blue?logo=next.js)](https://finhome.karstoft.pro)
+[![Build & Deploy](https://img.shields.io/badge/build%2Fdeploy-DigitalOcean-blue)](https://digitalocean.com)
+[![License](https://img.shields.io/github/license/OrKarstoft/finhome)](LICENSE)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Overview
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+FinHome is a flexible, privacy-focused tool for home budgeting. Unlike traditional budget apps, FinHome lets you make corrections and adjustments without altering your original budget, so you can see exactly how you’re tracking—whether you’re on track, behind, or ahead.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+FinHome runs **100% client-side**:  
+Your private financial data never leaves your browser. All data is securely stored in your browser’s local storage. If you want to share your budget, simply generate a Base64 string on the settings page and send it to another device or family member.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Live demo:** [finhome.karstoft.pro](https://finhome.karstoft.pro)
+- **Self-hosting:** Deploy your own instance with ease (see below).
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- **Correction Mode:** Adjust your budget and instantly see the difference without changing your original plan.
+- **Client-Side Privacy:** All data stays with you—no accounts, no cloud sync.
+- **Easy Sharing:** Export/import budgets with a shareable Base64 string.
+- **Modern UI:** Built with [Next.js](https://nextjs.org/) and [TypeScript](https://www.typescriptlang.org/).
+- **Responsive & Accessible:** Works on desktop and mobile.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Quick Start
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Try Online
 
-## Deploy on Vercel
+Visit [finhome.karstoft.pro](https://finhome.karstoft.pro) for the live version.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Self-Host
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/OrKarstoft/finhome.git
+    cd finhome
+    ```
+
+2. **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3. **Run locally:**
+    ```bash
+    npm run dev
+    ```
+    The app will be available at `http://localhost:3000`.
+
+4. **Build for production:**
+    ```bash
+    npm run build
+    npm start
+    ```
+
+### Deploy
+
+FinHome is production-ready and can be deployed to any platform supporting Node.js/Next.js (e.g., DigitalOcean, Vercel, Netlify).
+
+## Usage
+
+- **Budget Management:**  
+  Create your budget, record transactions, and use the corrections feature to track real progress.
+- **Sharing:**  
+  Go to the settings page, generate a Base64 string, and share with others.
+
+## Security & Privacy
+
+- **No server storage:**  
+  All financial data is kept in your browser (local storage).
+- **No tracking:**  
+  FinHome does not collect analytics or personal info.
+- **Open source:**  
+  Review the code and host your own instance for full control.
+
+## Contributing
+
+Contributions are welcome! Please open issues or submit pull requests for new features, bug fixes, or improvements.
+
+1. Fork this repository
+2. Create your feature branch (`git checkout -b feature/my-feature`)
+3. Commit your changes (`git commit -am 'Add my feature'`)
+4. Push to the branch (`git push origin feature/my-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+## Author
+
+Developed by [OrKarstoft](https://github.com/OrKarstoft)
+
+---
+
+**FinHome is free and open source. If you find it helpful, consider starring the repo!**
