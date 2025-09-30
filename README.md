@@ -4,7 +4,7 @@
 
 [![Live Demo](https://img.shields.io/badge/demo-finhome.karstoft.pro-blue?logo=next.js)](https://finhome.karstoft.pro)
 [![Build & Deploy](https://img.shields.io/badge/build%2Fdeploy-DigitalOcean-blue)](https://digitalocean.com)
-[![License](https://img.shields.io/github/license/OrKarstoft/finhome)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## Overview
 
